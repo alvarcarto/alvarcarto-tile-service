@@ -12,6 +12,7 @@
   "dependencies": {
     "express": "^4.14.0",
     "tilelive": "^5.12.2",
+    "tilelive-cache": "^0.7.1",
     "tilelive-mapnik": "^0.6.18"
   }
 }

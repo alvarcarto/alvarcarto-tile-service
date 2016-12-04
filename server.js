@@ -2,7 +2,9 @@
 var app = require('express')();
 var tilelive = require('tilelive');
 require('tilelive-mapnik').registerProtocols(tilelive);
-//require('v8-profiler-trigger')();
+tilelive = require('tilelive-cache')(tilelive, {
+    size: 10000
+});
 
 var filename = '../openstreetmap-carto/osm.xml';
 
@@ -19,7 +21,7 @@ tilelive.load('mapnik://' + filename, function(err, source) {
                 res.send('Tile rendering error: ' + err + '\n');
             }
         });
-    });    
+    });
 });
 
 console.log('Listening on port: ' + 8080);
