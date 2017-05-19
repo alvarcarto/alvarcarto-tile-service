@@ -1,3 +1,4 @@
+var path = require('path');
 var express = require('express');
 var tilestrata = require('tilestrata');
 var disk = require('tilestrata-disk');
