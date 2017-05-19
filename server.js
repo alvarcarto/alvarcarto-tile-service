@@ -1,28 +1,26 @@
-// Tile server using the node web framework Express (http://expressjs.com).
-var app = require('express')();
-var tilelive = require('tilelive');
-require('tilelive-mapnik').registerProtocols(tilelive);
-tilelive = require('tilelive-cache')(tilelive, {
-    size: 10000
-});
+var express = require('express');
+var tilestrata = require('tilestrata');
+var disk = require('tilestrata-disk');
+var mapnik = require('tilestrata-mapnik');
 
-var filename = '../openstreetmap-carto/osm.xml';
+var dataDir = process.argv[2] || './cache';
+console.log('Using following directory to cache tiles: ', dataDir);
 
-tilelive.load('mapnik://' + filename, function(err, source) {
-    if (err) throw err;
-    app.get('/:z/:x/:y.*', function(req, res) {
-        source.getTile(req.params.z, req.params.x, req.params.y, function(err, tile, headers) {
-            // `err` is an error object when generation failed, otherwise null.
-            // `tile` contains the compressed image file as a Buffer
-            // `headers` is a hash with HTTP headers for the image.
-            if (!err) {
-                res.send(tile);
-            } else {
-                res.send('Tile rendering error: ' + err + '\n');
-            }
-        });
-    });
-});
+var strata = tilestrata();
+strata.layer('bw')
+  .route('tile.png')
+  .use(disk.cache({ dir: path.join(dataDir, 'tiles/bw/') }))
+  .use(mapnik({
+    pathname: '../mapnik-styles/bw.xml',
+    tileSize: 256
+  }))
 
-console.log('Listening on port: ' + 8080);
-app.listen(8080);
+strata.layer('transparent')
+  .route('tile.png')
+  .use(disk.cache({ dir: path.join(dataDir, 'tiles/transparent/') }))
+  .use(mapnik({
+    pathname: '../mapnik-styles/transparent.xml',
+    tileSize: 256
+  }));
+
+strata.listen(8080);
