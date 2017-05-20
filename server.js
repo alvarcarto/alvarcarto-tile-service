@@ -24,4 +24,4 @@ strata.layer('transparent')
     tileSize: 256
   }));
 
-strata.listen(8080);
+strata.listen(process.env.PORT || 8080);
