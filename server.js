@@ -4,7 +4,7 @@ var tilestrata = require('tilestrata');
 var disk = require('tilestrata-disk');
 var mapnik = require('tilestrata-mapnik');
 
-var dataDir = process.argv[2] || './cache';
+var dataDir = process.env.CACHE_DIR || './cache';
 console.log('Using following directory to cache tiles: ', dataDir);
 
 var strata = tilestrata();
@@ -16,6 +16,7 @@ strata.layer('bw')
     tileSize: 256
   }))
 
+/*
 strata.layer('transparent')
   .route('tile.png')
   .use(disk.cache({ dir: path.join(dataDir, 'tiles/transparent/') }))
@@ -23,5 +24,6 @@ strata.layer('transparent')
     pathname: '../mapnik-styles/transparent.xml',
     tileSize: 256
   }));
+*/
 
 strata.listen(process.env.PORT || 8080);
