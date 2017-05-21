@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "watch": "nodemon -e xml,js --watch . --watch ../alvarcarto-cartocss/dist/ server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -15,5 +16,8 @@
     "tilestrata-dependency": "^0.5.0",
     "tilestrata-disk": "^0.5.0",
     "tilestrata-mapnik": "^0.4.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
   }
 }
