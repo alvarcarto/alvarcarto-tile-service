@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.15.3",
+    "glob": "^7.1.2",
     "mapnik": "^3.5.14",
     "tilestrata": "^2.0.2",
     "tilestrata-dependency": "^0.5.0",

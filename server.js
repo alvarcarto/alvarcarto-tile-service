@@ -3,30 +3,40 @@ var express = require('express');
 var tilestrata = require('tilestrata');
 var disk = require('tilestrata-disk');
 var mapnik = require('tilestrata-mapnik');
+var glob = require('glob');
 var config = require('./config');
 
-var useCache = !config.DISABLE_CACHE;
+var USE_CACHE = !config.DISABLE_CACHE;
+
+function addLayer(strata, styleId) {
+  console.log('Add tilestrata layer:', styleId);
+
+  var layer = strata.layer(styleId)
+    .route('tile.png')
+
+  if (USE_CACHE) {
+    var cacheDir = path.join(config.CACHE_DIR, styleId);
+    layer.use(disk.cache({ dir: cacheDir }));
+    console.log('Cache dir:', cacheDir);
+  }
+
+  var stylePath = path.join(config.STYLE_DIR, styleId + '.xml');
+  console.log('Mapnik style path:', stylePath);
+  layer.use(mapnik({
+    pathname: stylePath,
+    tileSize: 256
+  }));
+}
+
+function getStyleIdsSync(dir) {
+  var files = glob.sync(config.STYLE_DIR + '/*.xml');
+  return files.map(name => path.basename(name, path.extname(name)));
+}
 
 var strata = tilestrata();
 
-const bwLayer = strata.layer('bw')
-  .route('tile.png')
-if (useCache) {
-  bwLayer.use(disk.cache({ dir: path.join(config.CACHE_DIR, 'bw/') }))
-}
-bwLayer.use(mapnik({
-  pathname: path.join(config.STYLE_DIR, 'bw.xml'),
-  tileSize: 256
-}));
-
-const transparentLayer = strata.layer('transparent')
-  .route('tile.png')
-if (useCache) {
-  transparentLayer.use(disk.cache({ dir: path.join(config.CACHE_DIR, 'transparent/') }))
-}
-transparentLayer.use(mapnik({
-  pathname: path.join(config.STYLE_DIR, 'transparent.xml'),
-  tileSize: 256
-}));
+var styleIds = getStyleIdsSync(config.STYLE_DIR);
+console.log('Found mapnik styles:', styleIds.join(', '));
+styleIds.forEach(styleId => addLayer(strata, styleId));
 
 strata.listen(config.PORT);
