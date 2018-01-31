@@ -39,4 +39,8 @@ var styleIds = getStyleIdsSync(config.STYLE_DIR);
 console.log('Found mapnik styles:', styleIds.join(', '));
 styleIds.forEach(styleId => addLayer(strata, styleId));
 
-strata.listen(config.PORT);
+const server = strata.listen(config.PORT);
+
+if (config.HTTP_TIMEOUT_MS) {
+  server.timeout = config.HTTP_TIMEOUT_MS;
+}

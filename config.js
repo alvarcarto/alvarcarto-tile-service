@@ -11,6 +11,11 @@ var config = {
   STYLE_DIR: process.env.STYLE_DIR || '/home/alvar/mapnik-styles',
 };
 
+if (process.env.HTTP_TIMEOUT_MS) {
+  // e.g. 20 mins = 20 * 60 * 1000 = 1200000
+  config.HTTP_TIMEOUT_MS = Number(process.env.HTTP_TIMEOUT_MS),
+}
+
 console.log('Tile cache directory:', config.CACHE_DIR);
 console.log('Mapnik styles directory:', config.STYLE_DIR);
 
