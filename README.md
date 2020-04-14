@@ -9,3 +9,13 @@ Quick intro:
 
 * This service renders 256x256 map tiles for Leaflet
 * Caches map tiles to local filesystem
+
+
+## Local docker development
+
+To get started:
+
+* `docker-compose run tile bash`
+* `nvm use 8`
+* `npm install`
+* `docker-compose up`

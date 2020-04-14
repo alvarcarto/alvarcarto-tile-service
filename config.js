@@ -9,6 +9,11 @@ var config = {
   CACHE_DIR: process.env.CACHE_DIR || './cache',
   DISABLE_CACHE: process.env.DISABLE_CACHE === 'true',
   STYLE_DIR: process.env.STYLE_DIR || '/home/alvar/mapnik-styles',
+  MAPNIK_POSTGIS_DBNAME: process.env.MAPNIK_POSTGIS_DBNAME,
+  MAPNIK_POSTGIS_HOST: process.env.MAPNIK_POSTGIS_HOST,
+  MAPNIK_POSTGIS_PORT: process.env.MAPNIK_POSTGIS_PORT,
+  MAPNIK_POSTGIS_USER: process.env.MAPNIK_POSTGIS_USER,
+  MAPNIK_POSTGIS_PASSWORD: process.env.MAPNIK_POSTGIS_PASSWORD,
 };
 
 if (process.env.HTTP_TIMEOUT_MS) {

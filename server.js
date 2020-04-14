@@ -1,10 +1,11 @@
-var path = require('path');
-var express = require('express');
-var tilestrata = require('tilestrata');
-var disk = require('tilestrata-disk');
-var mapnik = require('tilestrata-mapnik');
-var glob = require('glob');
-var config = require('./config');
+const path = require('path');
+const _ = require('lodash');
+const tilestrata = require('tilestrata');
+const disk = require('tilestrata-disk');
+const mapnik = require('tilestrata-mapnik');
+const glob = require('glob');
+const config = require('./config');
+const mapnikUtil = require('./mapnik-util');
 
 var USE_CACHE = !config.DISABLE_CACHE;
 
@@ -21,15 +22,16 @@ function addLayer(strata, styleId) {
   }
 
   var stylePath = path.join(config.STYLE_DIR, styleId + '.xml');
+  var autogenStylePath = mapnikUtil.replacePostgisParametersFileSync(stylePath);
   console.log('Mapnik style path:', stylePath);
   layer.use(mapnik({
-    pathname: stylePath,
+    pathname: autogenStylePath,
     tileSize: 256
   }));
 }
 
 function getStyleIdsSync(dir) {
-  var files = glob.sync(config.STYLE_DIR + '/*.xml');
+  var files = _.filter(glob.sync(config.STYLE_DIR + '/*.xml'), filePath => !_.endsWith(filePath, `${mapnikUtil.AUTOGEN_SUFFIX}.xml`));
   return files.map(name => path.basename(name, path.extname(name)));
 }
 

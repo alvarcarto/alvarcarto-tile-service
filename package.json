@@ -4,15 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "watch": "nodemon -e xml,js --watch . --watch ../alvarcarto-cartocss/dist/ server.js",
+    "watch": "nodemon -e xml,js --watch . --watch ../alvarcarto-cartocss/dist/ --ignore '*autogen.xml' server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bluebird": "^3.7.2",
     "express": "^4.15.3",
     "glob": "^7.1.2",
-    "mapnik": "^3.5.14",
+    "lodash": "^4.17.15",
+    "mapnik": "^3.7.2",
     "tilestrata": "^2.0.2",
     "tilestrata-dependency": "^0.5.0",
     "tilestrata-disk": "^0.5.0",
