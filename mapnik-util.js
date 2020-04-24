@@ -44,20 +44,6 @@ function getAutogenStylePath(stylesheetPath) {
   return newPath;
 }
 
-// We need to write the new style into file, because data files (shapefiles) are relative to the
-// stylesheet path. If we would use fromString method, the filepath base needs to be
-// given as an option. This works in render service, but inside tile service we don't have that
-// possibility
-async function replacePostgisParametersFile(stylesheetPath) {
-  const xmlString = await fs.readFileAsync(stylesheetPath, { encoding: 'utf8' });
-
-  const newXmlString = replacePostgisParametersString(xmlString);
-  const newPath = getAutogenStylePath(stylesheetPath);
-
-  await fs.writeFileAsync(newPath, newXmlString, { encoding: 'utf8' });
-  return newPath;
-}
-
 function replacePostgisParametersFileSync(stylesheetPath) {
   const xmlString = fs.readFileSync(stylesheetPath, { encoding: 'utf8' });
 
@@ -70,7 +56,6 @@ function replacePostgisParametersFileSync(stylesheetPath) {
 
 module.exports = {
   replacePostgisParameters,
-  replacePostgisParametersFile,
   replacePostgisParametersFileSync,
   AUTOGEN_SUFFIX,
 };
