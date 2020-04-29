@@ -11,7 +11,7 @@ services:
       - DISABLE_CACHE=true
       - MAPNIK_POSTGIS_HOST=host.docker.internal
       - MAPNIK_POSTGIS_PORT=4321
-    command: bash -i -c 'nvm use 8 && npm run watch'
+    command: bash -i -c 'nvm use 8 && npm start'
     working_dir: /home/alvar/alvarcarto-tile-service
     volumes:
       - .:/home/alvar/alvarcarto-tile-service

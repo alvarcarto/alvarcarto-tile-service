@@ -1,8 +1,13 @@
+// WARNING: This utility does not work for multiple process if the DB parameters need
+//          to be different across processes. This utility is copied to tile service
+
 const fs = require('fs');
+const uuid = require('node-uuid');
 const path = require('path');
 const BPromise = require('bluebird');
 const _ = require('lodash');
 const config = require('./config');
+const logger = require('./logger')(__filename);
 
 BPromise.promisifyAll(fs);
 
@@ -44,13 +49,25 @@ function getAutogenStylePath(stylesheetPath) {
   return newPath;
 }
 
+// We need to write the new style into file, because data files (shapefiles) are relative to the
+// stylesheet path. If we would use fromString method, the filepath base needs to be
+// given as an option. This works in render service, but inside tile service we don't have that
+// possibility
 function replacePostgisParametersFileSync(stylesheetPath) {
   const xmlString = fs.readFileSync(stylesheetPath, { encoding: 'utf8' });
 
   const newXmlString = replacePostgisParametersString(xmlString);
   const newPath = getAutogenStylePath(stylesheetPath);
 
-  fs.writeFileSync(newPath, newXmlString, { encoding: 'utf8' });
+  // Complicated file write to make the write atomic
+  // atomic rename depends on file system, but in this case it is good enough
+  // Tmp file must be created straight to destination dir to prevent:
+  // "Error: EXDEV: cross-device link not permitted"
+  const dirName = path.dirname(newPath);
+  const tmpFile = path.join(dirName, `tmp-${uuid.v4()}`);
+  logger.info(`Writing new Mapnik config ${tmpFile} -> ${newPath}`);
+  fs.writeFileSync(tmpFile, newXmlString, { encoding: 'utf8' });
+  fs.renameSync(tmpFile, newPath);
   return newPath;
 }
 
