@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "npm run watch",
+    "bash": "docker-compose run cartocss bash -c 'bash --rcfile <(echo \"source ~/.bashrc; nvm use 8\")'",
     "watch": "nodemon -e xml,js --verbose --watch ./src --watch ../alvarcarto-cartocss/dist/ --ignore '*autogen.xml' src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

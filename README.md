@@ -15,7 +15,6 @@ Quick intro:
 
 To get started:
 
-* `docker-compose run tile bash`
-* `nvm use 8`
+* `npm run bash` to enter bash inside Docker
 * `npm install` and exit the bash session back to host
 * `docker-compose up`
