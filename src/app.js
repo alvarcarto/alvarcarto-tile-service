@@ -2,6 +2,7 @@ const path = require('path');
 const _ = require('lodash');
 const tilestrata = require('tilestrata');
 const disk = require('tilestrata-disk');
+const headers = require('tilestrata-headers');
 const mapnik = require('tilestrata-mapnik');
 const glob = require('glob');
 const config = require('./config');
@@ -19,9 +20,15 @@ function addLayer(strata, styleId) {
   if (USE_CACHE) {
     const cacheDir = path.join(config.CACHE_DIR, styleId);
     layer.use(disk.cache({ dir: cacheDir }));
+    layer.use(headers({ 'Cache-Control': 'max-age=3600' }));
     logger.info(`Cache dir: ${cacheDir}`);
   } else {
-    logger.info(`Cache disabled!`);
+    logger.info(`Disk cache and http cache headers disabled!`);
+    layer.use(headers({
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0',
+    }));
   }
 
   const stylePath = path.join(config.STYLE_DIR, styleId + '.xml');
